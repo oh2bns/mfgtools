@@ -220,6 +220,10 @@ int g_overall_failure;
 char g_wait[] = "|/-\\";
 int g_wait_index;
 
+int prog(size_t pos, size_t total, size_t mult = 100)
+{
+	return (int)(0.5 + (double)mult * pos / total);
+}
 
 string build_process_bar(size_t width, size_t pos, size_t total)
 {
@@ -245,7 +249,7 @@ string build_process_bar(size_t width, size_t pos, size_t total)
 	if (pos > total)
 		pos = total;
 
-	for (i = 1; i < (width-2) * pos / total; i++)
+	for (i = 1; i < prog(pos, total, width - 2); i++)
 	{
 		str[i] = '=';
 	}
@@ -257,8 +261,8 @@ string build_process_bar(size_t width, size_t pos, size_t total)
 		str[str.size() - 2] = '=';
 
 	string_ex per;
-	per.format("%d%%", pos * 100 / total);
-	
+	per.format("%d%%", prog(pos, total));
+
 	size_t start = (width - per.size()) / 2;
 	str.replace(start, per.size(), per);
 	str.insert(start, g_vt_yellow);
@@ -379,7 +383,7 @@ public:
 				m_trans_pos = nt.index;
 				return true;
 			}
-	
+
 			if ((nt.index - m_trans_pos) < (m_trans_size / 100)
 				&& nt.index != m_trans_size)
 				return false;
@@ -419,10 +423,11 @@ public:
 		if (nt->type == uuu_notify::NOTIFY_TRANS_POS || nt->type == uuu_notify::NOTIFY_DECOMPRESS_POS)
 		{
 			if (m_trans_size)
-				cout << g_vt_yellow << "\r" << m_trans_pos * 100 / m_trans_size <<"%" << g_vt_default;
+				cout << g_vt_yellow << "\r" << prog(m_trans_pos, m_trans_size) << "%" << g_vt_default;
 			else
 				cout << "\r" << m_trans_pos;
-
+			if (m_trans_size && m_trans_pos == m_trans_size)
+				cout << "\r";
 			cout.flush();
 		}
 
