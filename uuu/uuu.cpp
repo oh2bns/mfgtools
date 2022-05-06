@@ -681,8 +681,13 @@ int get_console_width()
 bool enable_vt_mode() { return true; }
 int get_console_width()
 {
-	struct winsize w;
-	ioctl(0, TIOCGWINSZ, &w);
+	struct winsize w = {};
+
+	if (ioctl(0, TIOCGWINSZ, &w) == -1)
+	{
+		// default to something sensible
+		w.ws_col = 80;
+	}
 	return w.ws_col;
 }
 #endif
