@@ -70,7 +70,7 @@ set(SOURCES
 )
 
 add_executable(uuu ${SOURCES})
-target_link_libraries(uuu uuc_s ${OPENSSL_LIBRARIES} ${LIBUSB_LIBRARIES} ${LIBZ_LIBRARIES} ${LIBZSTD_LIBRARIES}  dl bz2)
+target_link_libraries(uuu uuc_s ${OPENSSL_LIBRARIES} ${LIBUSB_LIBRARIES} ${LIBZ_LIBRARIES} ${LIBZSTD_LIBRARIES} dl bz2 atomic)
 
 install(TARGETS uuu DESTINATION bin)
 target_compile_definitions(uuu
